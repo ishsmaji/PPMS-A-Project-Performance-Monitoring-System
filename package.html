@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KMC-SHARP Project Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .project-master {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .project-master h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .master-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .master-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .master-item label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .master-item span {
+            display: block;
+            color: #222;
+            font-size: 15px;
+        }
+
+        .packages-section {
+            padding: 30px;
+        }
+
+        .packages-section h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .package-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .package-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .package-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .package-header h3 {
+            font-size: 18px;
+            flex: 1;
+        }
+
+        .package-number {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 15px;
+        }
+
+        .toggle-icon {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .package-body {
+            padding: 25px;
+            display: none;
+            background: #fafafa;
+        }
+
+        .package-body.active {
+            display: block;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .info-table th {
+            background: #1e3c72;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .info-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .section-title {
+            color: #1e3c72;
+            font-size: 18px;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .download-btn.mtp {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .download-btn.mtp:hover {
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .highlight {
+            background: #fffbea;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        @media (max-width: 768px) {
+            .master-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .package-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .package-number {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏗️ Kolkata Municipal Corporation Project Management System</h1>
+            <p>Sustainability, Hygiene and Resilience Project (KMC-SHARP)</p>
+        </div>
+
+        <!-- Project Master Data -->
+        <div class="project-master">
+            <h2>📋 Project Master Information</h2>
+            <div class="master-grid">
+                <div class="master-item">
+                    <label>Project Title</label>
+                    <span>Kolkata Municipal Corporation – Sustainability, Hygiene and Resilience Project (KMC‑SHARP)</span>
+                </div>
+                <!-- Added implementing agency -->
+                <div class="master-item">
+                    <label>Implementing Agency</label>
+                    <span>Kolkata Municipal Corporation (KMC)</span>
+                </div>
+                <div class="master-item">
+                    <label>Funding Agency</label>
+                    <span>Asian Development Bank (ADB)</span>
+                </div>
+                <div class="master-item">
+                    <label>ADB Inception Mission</label>
+                    <span>9–12 June 2025</span>
+                </div>
+                <div class="master-item">
+                    <label>Loan Number</label>
+                    <span>4584-IND</span>
+                </div>
+                <div class="master-item">
+                    <label>Project Approval by GoWB</label>
+                    <span>25th Feb 2025</span>
+                </div>
+                <div class="master-item">
+                    <label>Loan Signing Date</label>
+                    <span>22 May 2025</span>
+                </div>
+                <div class="master-item">
+                    <label>Loan Effectiveness Date</label>
+                    <span>20 Aug 2025</span>
+                </div>
+                <div class="master-item">
+                    <label>Loan Closure Date</label>
+                    <span>30 September 2032</span>
+                </div>
+                <div class="master-item">
+                    <label>Project Cost</label>
+                    <span class="highlight">$285 million</span>
+                </div>
+                <div class="master-item">
+                    <label>ADB Loan Amount</label>
+                    <span class="highlight">$200 million</span>
+                </div>
+                <!-- Updated project objective -->
+                <div class="master-item">
+                    <label>Project Objective</label>
+                    <span>Improvement of sewerage, drainage, pumping stations, and sewage treatment infrastructure within KMC limits</span>
+                </div>
+                <div class="master-item">
+                    <label>Active Packages (Works)</label>
+                    <span class="status-badge status-active">5 Packages with NTP</span>
+                </div>
+                <div class="master-item">
+                    <label>Consultant</label>
+                    <span>PMDSC</span>
+                </div>
+                <div class="master-item">
+                    <label>Financing Pattern - ADB Share</label>
+                    <span>70%</span>
+                </div>
+                <div class="master-item">
+                    <label>Financing Pattern - GoWB Share</label>
+                    <span>30%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Packages Section -->
+        <div class="packages-section">
+            <h2>📦 Active Project Packages</h2>
+
+            <!-- Package SD01 -->
+            <div class="package-card">
+                <div class="package-header" onclick="togglePackage('sd01')">
+                    <h3>Development of S&D Network in Nayabad and Adjoining areas in Borough XII (Part of Ward 109)</h3>
+                    <span class="package-number">SD01</span>
+                    <span class="toggle-icon" id="icon-sd01">▼</span>
+                </div>
+                <div class="package-body" id="body-sd01">
+                    <div class="section-title">📄 Package Information</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Package Number</th>
+                            <td>KURIP/OCB/SD01/2023-24</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-badge status-active">NTP issued – 24.09.2025</span></td>
+                        </tr>
+                        <tr>
+                            <th>Borough / Ward</th>
+                            <td>Borough XII / Ward 109</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor</th>
+                            <td>M/s Traders & Engineers Private Limited (TEPL)</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Address</th>
+                            <td>16A, Lake View Road, Kolkata 700029</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">💰 Financial Details</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Accepted Contract Amount</th>
+                            <td><span class="highlight">₹ 59,72,75,030.00</span><br><small>(Rupees Fifty-Nine Crore Seventy-Two Lakhs Seventy-Five Thousand and Thirty Only)</small></td>
+                        </tr>
+                        <tr>
+                            <th>Provisional Sum</th>
+                            <td>₹ 4,25,00,000.00</td>
+                        </tr>
+                        <tr>
+                            <th>Net Works Value</th>
+                            <td>₹ 55,47,75,030.00</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📅 Timeline & Dates</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Bid Submission Date</th>
+                            <td>04 April 2024</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Reference No.</th>
+                            <td>PMU/186/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Issue Date</th>
+                            <td>28 January 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Agreement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Reference No.</th>
+                            <td>PMU/793/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Issue Date</th>
+                            <td>24 September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Work Commencement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Duration</th>
+                            <td>913 consecutive calendar days</td>
+                        </tr>
+                        <tr>
+                            <th>Work Completion Date</th>
+                            <td>15 April 2028</td>
+                        </tr>
+                    </table>
+
+                    <!-- Added physical and financial progress section -->
+                    <div class="section-title">📊 Physical & Financial Progress (Up to December 2025)</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Expenditure till Date (INR Crores)</th>
+                            <td>Nil</td>
+                        </tr>
+                        <tr>
+                            <th>Financial Progress (%) based on certified invoice</th>
+                            <td>10% Mob. Adv made</td>
+                        </tr>
+                        <tr>
+                            <th>Physical Progress (%)</th>
+                            <td>Pre-construction activity started</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">🔧 Component-wise Status</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Component</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Topographical Survey</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>TBM distribution & checking</td>
+                            <td><span class="status-badge status-active">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Existing manhole details (collection of data)</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📥 Document Downloads</div>
+                    <div class="button-group">
+                        <button class="download-btn" onclick="downloadLOA('SD01')">📄 Download LOA</button>
+                        <button class="download-btn mtp" onclick="downloadMTP('SD01')">📄 Download NTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package SD02 -->
+            <div class="package-card">
+                <div class="package-header" onclick="togglePackage('sd02')">
+                    <h3>Development of S&D Network in Ajaynagar and Adjoining Areas in Borough XII (Part of Ward 109)</h3>
+                    <span class="package-number">SD02</span>
+                    <span class="toggle-icon" id="icon-sd02">▼</span>
+                </div>
+                <div class="package-body" id="body-sd02">
+                    <div class="section-title">📄 Package Information</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Package Number</th>
+                            <td>KURIP/OCB/SD02/2023-24</td>
+                        </tr>
+                        <tr>
+                            <th>Original Contract Value</th>
+                            <td><span class="highlight">Rs. 47.70 Crores</span></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-badge status-active">Contract Awarded – 15.10.2025</span></td>
+                        </tr>
+                        <tr>
+                            <th>Borough / Ward</th>
+                            <td>Borough XII / Ward 109</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor</th>
+                            <td>M/s Traders & Engineers Private Limited (TEPL)</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Address</th>
+                            <td>16A, Lake View Road, Kolkata 700029</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>tepl_kolkata@rediffmail.com</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">💰 Financial Details</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Original Bid Price</th>
+                            <td>₹ 59,72,75,030.00</td>
+                        </tr>
+                        <tr>
+                            <th>Accepted Contract Amount</th>
+                            <td><span class="highlight">₹ 47,70,08,205.00</span><br><small>(Rupees Forty Seven Crore Seventy Lakhs Eight Thousand Two Hundred and Five Only)</small></td>
+                        </tr>
+                        <tr>
+                            <th>Provisional Sum</th>
+                            <td>₹ 4,25,00,000.00</td>
+                        </tr>
+                        <tr>
+                            <th>Net Works Value</th>
+                            <td>₹ 44,40,08,205.00</td>
+                        </tr>
+                        <tr>
+                            <th>GST on Works</th>
+                            <td>18%</td>
+                        </tr>
+                        <tr>
+                            <th>% Variation over Engineer's Estimate</th>
+                            <td>+1.50%</td>
+                        </tr>
+                        <tr>
+                            <th>Ranking</th>
+                            <td>L1 (Lowest Bidder)</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📅 Timeline & Dates</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Bid Submission Date</th>
+                            <td>05 April 2024</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Reference No.</th>
+                            <td>PMU/85/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Issue Date</th>
+                            <td>28 April 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Agreement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Reference No.</th>
+                            <td>PMU/794/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Issue Date</th>
+                            <td>24 September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Work Commencement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Duration</th>
+                            <td>1095 consecutive calendar days</td>
+                        </tr>
+                        <tr>
+                            <th>Work Completion Date</th>
+                            <td>14 October 2028</td>
+                        </tr>
+                    </table>
+
+                    <!-- Added physical and financial progress section -->
+                    <div class="section-title">📊 Physical & Financial Progress (Up to December 2025)</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Expenditure till Date (INR Crores)</th>
+                            <td>Nil</td>
+                        </tr>
+                        <tr>
+                            <th>Financial Progress (%) based on certified invoice</th>
+                            <td>10% Mob. Adv made</td>
+                        </tr>
+                        <tr>
+                            <th>Physical Progress (%)</th>
+                            <td>Pre-construction activity started</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">🔧 Component-wise Status</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Component</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Topographical Survey</td>
+                            <td><span class="stat
+                                us-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>TBM distribution & checking</td>
+                            <td><span class="status-badge status-active">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Existing manhole details (collection of data)</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📥 Document Downloads</div>
+                    <div class="button-group">
+                        <button class="download-btn" onclick="downloadLOA('SD02')">📄 Download LOA</button>
+                        <button class="download-btn mtp" onclick="downloadMTP('SD02')">📄 Download NTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package SD06R -->
+            <div class="package-card">
+                <div class="package-header" onclick="togglePackage('sd06r')">
+                    <h3>Development of S&D Network in Julpia Catchment (Part of Ward 142) including Construction of Julpia Pumping Station in Borough XVI</h3>
+                    <span class="package-number">SD06R</span>
+                    <span class="toggle-icon" id="icon-sd06r">▼</span>
+                </div>
+                <div class="package-body" id="body-sd06r">
+                    <div class="section-title">📄 Package Information</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Package Number</th>
+                            <td>KMC-SHARP/OCB/SD06R/2024-25</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-badge status-active">NTP issued – 24.09.2025</span></td>
+                        </tr>
+                        <tr>
+                            <th>Borough / Ward</th>
+                            <td>Borough XVI / Ward 142</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor</th>
+                            <td>M/s LC Infra Projects Pvt. Ltd. - Gypsum Structural JV</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Address</th>
+                            <td>409, 4th Floor, Iscon Elegance, Near Jain Temple, Prahladnagar Cross Road, S. G. Highway, Ahmedabad - 380015, Gujarat, India</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">💰 Financial Details</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Accepted Contract Amount</th>
+                            <td><span class="highlight">₹ 2,18,15,02,680.00</span><br><small>(Rupees Two Hundred Eighteen Crore Fifteen Lakh Two Thousand Six Hundred and Eighty Only)</small></td>
+                        </tr>
+                        <tr>
+                            <th>Provisional Sum (Works)</th>
+                            <td>₹ 13,72,00,000.00</td>
+                        </tr>
+                        <tr>
+                            <th>Operation & Maintenance</th>
+                            <td>₹ 10,00,000.00</td>
+                        </tr>
+                        <tr>
+                            <th>O&M Duration</th>
+                            <td>60 months (1825 days) from date of taking over</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📅 Timeline & Dates</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Bid Submission Date</th>
+                            <td>12 December 2024</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Reference No.</th>
+                            <td>PMU/184/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Issue Date</th>
+                            <td>22 August 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Agreement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Reference No.</th>
+                            <td>PMU/791/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Issue Date</th>
+                            <td>24 September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Work Commencement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Duration</th>
+                            <td>1461 consecutive calendar days</td>
+                        </tr>
+                        <tr>
+                            <th>Work Completion Date</th>
+                            <td>14 October 2029</td>
+                        </tr>
+                    </table>
+
+                    <!-- Added physical and financial progress section -->
+                    <div class="section-title">📊 Physical & Financial Progress (Up to December 2025)</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Original Contract Value</th>
+                            <td><span class="highlight">Rs. 218.15 Crores</span></td>
+                        </tr>
+                        <tr>
+                            <th>Expenditure till Date (INR Crores)</th>
+                            <td>Nil</td>
+                        </tr>
+                        <tr>
+                            <th>Financial Progress (%) based on certified invoice</th>
+                            <td>10% Mob. Adv made</td>
+                        </tr>
+                        <tr>
+                            <th>Physical Progress (%)</th>
+                            <td>Pre-construction activities works, trial pits & laying of sewer lines started</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">🔧 Component-wise Status</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Component</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Topographical Survey</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>TBM distribution & checking</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Existing manhole details (collection of data)</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Soil Investigation</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📥 Document Downloads</div>
+                    <div class="button-group">
+                        <button class="download-btn" onclick="downloadLOA('SD06R')">📄 Download LOA</button>
+                        <button class="download-btn mtp" onclick="downloadMTP('SD06R')">📄 Download NTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package SD07R -->
+            <div class="package-card">
+                <div class="package-header" onclick="togglePackage('sd07r')">
+                    <h3>Development of S&D Network in Kabardanga Catchment (Part of Ward 142 & Ward 143) including Construction of Kabardanga Pumping Station in Borough XVI</h3>
+                    <span class="package-number">SD07R</span>
+                    <span class="toggle-icon" id="icon-sd07r">▼</span>
+                </div>
+                <div class="package-body" id="body-sd07r">
+                    <div class="section-title">📄 Package Information</div > 
+                    <table class="info-table">
+                        <tr>
+                            <th>Package Number</th> 
+                            <td>KMC-SHARP/OCB/SD07R/2024-25</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-badge status-active">NTP issued – 24.09.2025</span></td>
+                        </tr>
+                        <tr>
+                            <th>Borough / Ward</th>
+                            <td>Borough XVI / Ward 142 & 143</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor</th>
+                            <td>M/s LC Infra Projects Pvt. Ltd. - Gypsum Structural JV</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Address</th>
+                            <td>409, 4th Floor, Iscon Elegance, Near Jain Temple, Prahladnagar Cross Road, S. G. Highway, Ahmedabad - 380015, Gujarat, India</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">💰 Financial Details</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Accepted Contract Amount</th>
+                            <td><span class="highlight">₹ 1,86,52,10,186.00</span><br><small>(Rupees One Hundred and Eighty Six Crore Fifty Two Lakhs Ten Thousand One Hundred and Eighty Six Only)</small></td>
+                        </tr>
+                        <tr>
+                            <th>Provisional Sum (Works)</th>
+                            <td>₹ 11,88,00,000.00 (Rupees Eleven Crore Eighty Eight Lakhs Only)</td>
+                        </tr>
+                        <tr>
+                            <th>Operation & Maintenance</th>
+                            <td>₹ 10,00,000.00 (Rupees Ten Lakhs Only)</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📅 Timeline & Dates</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Bid Submission Date</th>
+                            <td>12 December 2024</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Reference No.</th>
+                            <td>PMU/185/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Issue Date</th>
+                            <td>22 August 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Agreement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Reference No.</th>
+                            <td>PMU/792/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Issue Date</th>
+                            <td>24 September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Work Commencement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Duration</th>
+                            <td>1461 consecutive calendar days</td>
+                        </tr>
+                        <tr>
+                            <th>Work Completion Date</th>
+                            <td>14 October 2029</td>
+                        </tr>
+                    </table>
+
+                    <!-- Added physical and financial progress section -->
+                    <div class="section-title">📊 Physical & Financial Progress (Up to December 2025)</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Original Contract Value</th>
+                            <td><span class="highlight">Rs. 186.52 Crores</span></td>
+                        </tr>
+                        <tr>
+                            <th>Expenditure till Date (INR Crores)</th>
+                            <td>Nil</td>
+                        </tr>
+                        <tr>
+                            <th>Financial Progress (%) based on certified invoice</th>
+                            <td>10% Mob. Adv made</td>
+                        </tr>
+                        <tr>
+                            <th>Physical Progress (%)</th>
+                            <td>Pre-construction activity started, trial pits & laying of sewer lines started</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">🔧 Component-wise Status</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Component</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Topographical Survey</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>TBM distribution & checking</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Existing manhole details (collection of data)</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Soil Investigation</td>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">Work in Progress</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📥 Document Downloads</div>
+                    <div class="button-group">
+                        <button class="download-btn" onclick="downloadLOA('SD07R')">📄 Download LOA</button>
+                        <button class="download-btn mtp" onclick="downloadMTP('SD07R')">📄 Download NTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package SD08 -->
+            <div class="package-card">
+                <div class="package-header" onclick="togglePackage('sd08')">
+                    <h3>Development of Sewerage & Drainage Network along Sonamukhi Main Road and Kastodanga Road in Borough XIV (Ward 127 – Part)</h3>
+                    <span class="package-number">SD08</span>
+                    <span class="toggle-icon" id="icon-sd08">▼</span>
+                </div>
+                <div class="package-body" id="body-sd08">
+                    <div class="section-title">📄 Package Information</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Package Number</th>
+                            <td>KMC-SHARP/OCB/SD08/2024-25</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-badge status-active">NTP issued – 24.09.2025</span></td>
+                        </tr>
+                        <tr>
+                            <th>Borough / Ward</th>
+                            <td>Borough XIV / Ward 127</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor</th>
+                            <td>M/s TEPL – RKESL JV</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Address</th>
+                            <td>16A, Lake View Road, Kolkata 700 029</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>projects@teplconstructions.com / teplkurip@teplconstructions.com</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">💰 Financial Details</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Accepted Contract Amount</th>
+                            <td><span class="highlight">₹ 1,27,32,25,065.00</span><br><small>(Rupees One Hundred Twenty Seven Crore Thirty Two Lakhs Twenty Five Thousand and Sixty Five Only)</small></td>
+                        </tr>
+                        <tr>
+                            <th>Including</th>
+                            <td>Provisional Sum</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📅 Timeline & Dates</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Bid Submission Date</th>
+                            <td>12 December 2024</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Reference No.</th>
+                            <td>PMU/183/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>LOA Issue Date</th>
+                            <td>22 August 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Agreement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Reference No.</th>
+                            <td>PMU/795/2025-26</td>
+                        </tr>
+                        <tr>
+                            <th>NTP Issue Date</th>
+                            <td>24 September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Work Commencement Date</th>
+                            <td>15 October 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Contract Duration</th>
+                            <td>1278 consecutive calendar days</td>
+                        </tr>
+                        <tr>
+                            <th>Work Completion Date</th>
+                            <td>14 April 2029</td>
+                        </tr>
+                    </table>
+
+                    <!-- Added physical and financial progress section -->
+                    <div class="section-title">📊 Physical & Financial Progress (Up to December 2025)</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Original Contract Value</th>
+                            <td><span class="highlight">Rs. 127.32 Crores</span></td>
+                        </tr>
+                        <tr>
+                            <th>Expenditure till Date (INR Crores)</th>
+                            <td>Nil</td>
+                        </tr>
+                        <tr>
+                            <th>Financial Progress (%) based on certified invoice</th>
+                            <td>10% Mob. Adv invoicing completed & payment made</td>
+                        </tr>
+                        <tr>
+                            <th>Physical Progress (%)</th>
+                            <td>Pre-construction activities works, trial pits & laying of sewer lines started</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">🔧 Component-wise Status</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Component</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Initial Topo survey & site set up</td>
+                            <td>Topo survey work of Zone 1, 4, 5 & 6 submitted. Survey work in progress at Zone 3 & 7</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">👥 Key Personnel</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Project Director</th>
+                            <td>Dr. Vishwanath, IAS</td>
+                        </tr>
+                        <tr>
+                            <th>Contractor Representative</th>
+                            <td>Mr. Soham Guha, Director</td>
+                        </tr>
+                        <tr>
+                            <th>Director General (Project)</th>
+                            <td>Durjay Sarkar</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📝 Pre-Construction Activities</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Survey Drawing Submission</th>
+                            <td>31 January 2026</td>
+                        </tr>
+                        <tr>
+                            <th>Trial Trench Excavation</th>
+                            <td>Required before work commencement</td>
+                        </tr>
+                        <tr>
+                            <th>Site Office Location</th>
+                            <td>To be relocated to Ward 127 (from Ward 128)</td>
+                        </tr>
+                        <tr>
+                            <th>Health & Safety Plan</th>
+                            <td>SEMP to be submitted before site work</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">📥 Document Downloads</div>
+                    <div class="button-group">
+                        <button class="download-btn" onclick="downloadLOA('SD08')">📄 Download LOA</button>
+                        <button class="download-btn mtp" onclick="downloadMTP('SD08')">📄 Download NTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Added new packages section for upcoming and deferred packages -->
+            <h2 style="color: #1e3c72; margin-top: 40px; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📋 Other Project Packages</h2>
+
+            <!-- Package SD03R - Deferred -->
+            <div class="package-card">
+                <div class="package-header" style="background: linear-gradient(135deg, #868686 0%, #5a5a5a 100%);">
+                    <h3>S&D Network & Pumping Station in Anandapur, Borough XII (Ward 108 – part)</h3>
+                    <span class="package-number">SD03R</span>
+                    <span class="status-badge" style="background: #f8d7da; color: #721c24; margin-left: 15px;">Deferred to Phase 2</span>
+                </div>
+            </div>
+
+            <!-- Package SD04 -->
+            <div class="package-card">
+                <div class="package-header" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);">
+                    <h3>41 MLD STP at Hossainpur (Ward 108) with 15 years O&M</h3>
+                    <span class="package-number">SD04</span>
+                    <span class="status-badge" style="background: #d1ecf1; color: #0c5460; margin-left: 15px;">Tender to be floated</span>
+                </div>
+            </div>
+
+            <!-- Package SD05A -->
+            <div class="package-card">
+                <div class="package-header" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);">
+                    <h3>Trunk sewer along Anandapur Highway + Pumping Station at Hossainpur (Ward 108)</h3>
+                    <span class="package-number">SD05A</span>
+                    <span class="status-badge" style="background: #d1ecf1; color: #0c5460; margin-left: 15px;">Tender to be floated</span>
+                </div>
+            </div>
+
+            <!-- Package SD09R -->
+            <div class="package-card">
+                <div class="package-header" style="background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);">
+                    <h3>S&D Network & Pumping Station at Jadav Ghosh Rd, Borough XIV & XVI (Ward 126 & 127 – part)</h3>
+                    <span class="package-number">SD09R</span>
+                    <span class="status-badge" style="background: #cce5ff; color: #004085; margin-left: 15px;">ADB approved Technical Bid</span>
+                </div>
+            </div>
+
+            <!-- Added ADB Review Mission section -->
+            <h2 style="color: #1e3c72; margin-top: 40px; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🔍 ADB Review Mission (24–28 Nov 2025)</h2>
+
+            <div class="package-card">
+                <div class="package-body" style="display: block;">
+                    <div class="section-title">📍 Site Visits Conducted</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #667eea;">✓ SD01 – Nayabad</li>
+                        <li style="padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #667eea;">✓ SD02 – Ajaynagar</li>
+                        <li style="padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #667eea;">✓ SD06R – Julpia</li>
+                        <li style="padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #667eea;">✓ SD07R – Kabardanga</li>
+                        <li style="padding: 10px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #667eea;">✓ SD08 – Sonamukhi / Kastodanga</li>
+                    </ul>
+
+                    <div class="section-title">🔑 Key Observations</div>
+                    <table class="info-table">
+                        <tr>
+                            <td>All works are in pre-construction or early construction stage</td>
+                        </tr>
+                        <tr>
+                            <td>Environmental precautions advised near sensitive zones</td>
+                        </tr>
+                        <tr>
+                            <td>Micro-tunnelling pit locations to be carefully selected</td>
+                        </tr>
+                        <tr>
+                            <td>Safeguard documents to be updated where site locations changed</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Added Phase 2 information section -->
+            <h2 style="color: #1e3c72; margin-top: 40px; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🚀 KMC-SHARP Phase 2</h2>
+
+            <div class="package-card">
+                <div class="package-body" style="display: block;">
+                    <table class="info-table">
+                        <tr>
+                            <th>PPR & Concept Report</th>
+                            <td>Submitted in July 2025</td>
+                        </tr>
+                        <tr>
+                            <th>DPR Preparation</th>
+                            <td>Started in September 2025</td>
+                        </tr>
+                        <tr>
+                            <th>Approval for Additional Staff & Services</th>
+                            <td>Granted on 17.10.2025</td>
+                        </tr>
+                        <tr>
+                            <th>Current Status</th>
+                            <td><span class="status-badge" style="background: #fff3cd; color: #856404;">DPR preparation in progress by PM-DSC</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Added SD04 & SD05A revised proposal section -->
+            <h2 style="color: #1e3c72; margin-top: 40px; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📝 SD04 & SD05A – Revised Proposal</h2>
+
+            <div class="package-card">
+                <div class="package-body" style="display: block;">
+                    <div class="section-title">🔄 Key Changes</div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Original Issue</th>
+                            <td>Original land under litigation</td>
+                        </tr>
+                        <tr>
+                            <th>Alternative Land</th>
+                            <td>KMDA land at Anandapur (Ward 108)</td>
+                        </tr>
+                        <tr>
+                            <th>Pumping Station</th>
+                            <td>Single consolidated pumping station instead of two</td>
+                        </tr>
+                        <tr>
+                            <th>Trunk Sewer</th>
+                            <td>Crossing TP Canal via micro-tunnelling</td>
+                        </tr>
+                        <tr>
+                            <th>STP Renamed</th>
+                            <td>Anandapur STP</td>
+                        </tr>
+                        <tr>
+                            <th>Ultimate Capacity</th>
+                            <td>41 MLD, developed in two tiers</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Toggle package visibility
+        function togglePackage(packageId) {
+            const body = document.getElementById('body-' + packageId);
+            const icon = document.getElementById('icon-' + packageId);
+            
+            if (body.classList.contains('active')) {
+                body.classList.remove('active');
+                icon.classList.remove('active');
+            } else {
+                body.classList.add('active');
+                icon.classList.add('active');
+            }
+        }
+
+        // Download LOA function
+        function downloadLOA(packageCode) {
+            // Map package codes to LOA image files
+            const loaFiles = {
+                'SD01': 'documents/SD01-LOA.jpeg',
+                'SD02': 'documents/SD02-LOA.jpeg',
+                'SD06R': 'documents/SD06R-LOA.jpeg',
+                'SD07R': 'documents/SD07R-LOA.jpeg',
+                'SD08': 'documents/SD08-LOA.jpeg'
+            };
+            
+            const filePath = loaFiles[packageCode];
+            if (filePath) {
+                // Open the LOA image in a new tab
+                window.open(filePath, '_blank');
+            } else {
+                alert(`LOA document not available for Package ${packageCode}`);
+            }
+        }
+
+        // Download NTP/MTP function
+        function downloadMTP(packageCode) {
+            // Map package codes to NTP image files
+            const ntpFiles = {
+                'SD01': 'documents/SD01 NTP.jpeg',
+                'SD02': 'documents/SD02-NTP.jpeg',
+                'SD06R': 'documents/SD06R-NTP.jpeg',
+                'SD07R': 'documents/SD07R-NTP.jpeg',
+                'SD08': 'documents/SD08-NTP.jpeg'
+            };
+            
+            const filePath = ntpFiles[packageCode];
+            if (filePath) {
+                // Open the NTP image in a new tab
+                window.open(filePath, '_blank');
+            } else {
+                alert(`NTP document not available for Package ${packageCode}`);
+            }
+        }
+    </script>
+</body>
+</html>
